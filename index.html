@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGPA Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    h1 { text-align: center; color: #4CAF50; }
+    .container { width: 80%; margin: auto; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    table, th, td { border: 1px solid black; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+    #calculateButton { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>SGPA Calculator</h1>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Credits</th>
+          <th>Grade</th>
+          <th>Grade Points</th>
+          <th>Credit Points</th>
+        </tr>
+      </thead>
+      <tbody id="subjectTable">
+        <!-- Subjects will be populated here by JavaScript -->
+      </tbody>
+    </table>
+    <button id="calculateButton" onclick="calculateSGPA()">Calculate SGPA</button>
+    <p id="sgpaResult"></p>
+  </div>
+
+  <script>
+    const subjects = [
+      { name: "Human Resource Management", credits: 3 },
+      { name: "Financial Management", credits: 4 },
+      { name: "Decision Sciences-2", credits: 4 },
+      { name: "Marketing Management-2", credits: 2 },
+      { name: "Information Systems for Management", credits: 4 },
+      { name: "Entrepreneurship Development", credits: 3 },
+      { name: "Research Methodology and IPR", credits: 3 },
+      { name: "Operations Management", credits: 3 },
+      { name: "Advanced Excel", credits: 2 },
+    ];
+
+    const gradePoints = {
+      "O": 10,
+      "A+": 9,
+      "A": 8,
+      "B+": 7,
+      "B": 6,
+      "C": 5,
+      "P": 4,
+      "F": 0,
+    };
+
+    function populateTable() {
+      const table = document.getElementById("subjectTable");
+      subjects.forEach((subject, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${subject.name}</td>
+          <td>${subject.credits}</td>
+          <td>
+            <select id="grade${index}">
+              <option value="O">O</option>
+              <option value="A+">A+</option>
+              <option value="A">A</option>
+              <option value="B+">B+</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+              <option value="P">P</option>
+              <option value="F">F</option>
+            </select>
+          </td>
+          <td id="gradePoints${index}">-</td>
+          <td id="creditPoints${index}">-</td>
+        `;
+        table.appendChild(row);
+      });
+    }
+
+    function calculateSGPA() {
+      let totalCreditPoints = 0;
+      let totalCredits = 0;
+
+      subjects.forEach((subject, index) => {
+        const grade = document.getElementById(`grade${index}`).value;
+        const gradePoint = gradePoints[grade];
+        const creditPoint = gradePoint * subject.credits;
+
+        document.getElementById(`gradePoints${index}`).innerText = gradePoint;
+        document.getElementById(`creditPoints${index}`).innerText = creditPoint;
+
+        totalCreditPoints += creditPoint;
+        totalCredits += subject.credits;
+      });
+
+      const sgpa = (totalCreditPoints / totalCredits).toFixed(2);
+      document.getElementById("sgpaResult").innerText = `Your SGPA is: ${sgpa}`;
+    }
+
+    populateTable();
+  </script>
+</body>
+</html>
